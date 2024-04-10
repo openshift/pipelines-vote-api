@@ -23,6 +23,8 @@ func setupRouter() *gin.Engine {
 				voteA++
 			case "b":
 				voteB++
+			case "c":
+				voteB+=2
 			}
 		}
 		payload["a"] = voteA
