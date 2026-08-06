@@ -8,10 +8,13 @@ import (
 )
 
 var inMemoryStore = make(map[string]string)
-var redirectURL = "http://0.0.0.0:9000"
 
 func setupRouter() *gin.Engine {
 	r := gin.Default()
+
+	r.GET("/healthz", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"status": "ok"})
+	})
 
 	r.GET("/vote", func(c *gin.Context) {
 		payload := gin.H{}
@@ -30,6 +33,10 @@ func setupRouter() *gin.Engine {
 		c.JSON(http.StatusOK, payload)
 	})
 
+	r.GET("/vote/total", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"total": len(inMemoryStore)})
+	})
+
 	r.POST("/vote", func(c *gin.Context) {
 		buf := make([]byte, 1024)
 		num, _ := c.Request.Body.Read(buf)
@@ -41,6 +48,7 @@ func setupRouter() *gin.Engine {
 		vote := temp["vote"]
 		inMemoryStore[voter_id] = vote
 	})
+
 	return r
 }
 
